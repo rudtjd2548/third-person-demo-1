@@ -1,12 +1,14 @@
+import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import LoungePage from '@src/pages/lounge.tsx'
+
+const LoungePage = React.lazy(() => import('@src/pages/lounge.tsx'))
 
 export default function App() {
   return (
     <>
       <Routes>
-        <Route index element={<LoungePage />} />
-        <Route path={'*'} element={<Navigate replace to={'/'} />} />
+        <Route path={'lounge'} element={<LoungePage />} />
+        <Route path={'*'} element={<Navigate replace to={'/lounge'} />} />
       </Routes>
     </>
   )

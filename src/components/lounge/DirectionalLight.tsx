@@ -7,10 +7,10 @@ export default function CustomDirectionalLight({ ...props }) {
   const controls = useControls(
     'directional light',
     {
-      x: { min: -50, max: 50, step: 0.01, value: 25 },
-      y: { min: -50, max: 50, step: 0.01, value: 37 },
-      z: { min: -50, max: 50, step: 0.01, value: 47 },
-      intensity: { min: 0, max: 10, step: 0.01, value: 3 },
+      x: { min: -50, max: 50, step: 0.01, value: 26 },
+      y: { min: -50, max: 50, step: 0.01, value: 50 },
+      z: { min: -50, max: 50, step: 0.01, value: 24 },
+      intensity: { min: 0, max: 10, step: 0.01, value: 2 },
       color: '#000',
       camera: { min: 0, max: 1000, step: 0.01, value: 100 },
       near: { min: 0, max: 10, step: 0.01, value: 0.1 },

@@ -5,7 +5,7 @@ import { Leva } from 'leva'
 export default function LoungePage() {
   return (
     <div className='h-full'>
-      <Canvas id='lounge-canvas' shadows linear={true} dpr={[1, 1.5]}>
+      <Canvas id='lounge-canvas' shadows linear={false} dpr={[1, 1.5]}>
         <Scene />
       </Canvas>
       <Leva collapsed={true} hidden={true} />

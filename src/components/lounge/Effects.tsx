@@ -1,18 +1,23 @@
-import { DepthOfField, EffectComposer } from '@react-three/postprocessing'
-import { useControls } from 'leva'
+import { Bloom, EffectComposer, Noise } from '@react-three/postprocessing'
+import { KernelSize, Resolution, BlendFunction } from 'postprocessing'
 
 export default function Effects() {
-  const controls = useControls('effects', {
-    focusDistance: { min: 0, max: 10, step: 0.1, value: 0 },
-    focalLength: { min: 0, max: 10, step: 0.01, value: 0.18 },
-    bokehScale: { min: 0, max: 10, step: 0.1, value: 5 },
-  })
   return (
     <EffectComposer>
-      <DepthOfField
-        focusDistance={controls.focusDistance} // where to focus
-        focalLength={controls.focalLength} // focal length
-        bokehScale={controls.bokehScale} // bokeh size
+      <Bloom
+        intensity={1} // The bloom intensity.
+        blurPass={undefined} // A blur pass.
+        kernelSize={KernelSize.LARGE} // blur kernel size
+        luminanceThreshold={1} // luminance threshold. Raise this value to mask out darker elements in the scene.
+        luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+        mipmapBlur={true} // Enables or disables mipmap blur.
+        resolutionX={Resolution.AUTO_SIZE} // The horizontal resolution.
+        resolutionY={Resolution.AUTO_SIZE} // The vertical resolution.
+      />
+      <Noise
+        opacity={0.3}
+        premultiply // enables or disables noise premultiplication
+        blendFunction={BlendFunction.ADD} // blend mode
       />
     </EffectComposer>
   )

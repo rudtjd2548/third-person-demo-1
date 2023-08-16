@@ -10,11 +10,6 @@ export const dtr = (deg: number) => {
   return (Math.PI / 180) * deg
 }
 
-export function findKeyWithWord(obj: any, word: string): any {
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key) && key.includes(word)) {
-      return key
-    }
-  }
-  return null
+export const lerp = (start: number, end: number, lerp: number) => {
+  return start + (end - start) * lerp
 }

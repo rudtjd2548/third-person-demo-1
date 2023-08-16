@@ -9,23 +9,13 @@ import Table from '@src/components/lounge/Table.tsx'
 import Flies from '@src/components/lounge/Flies.tsx'
 
 export default function Scene() {
-  const onClickGround = (e) => {
-    const detail = { pointer: e.point }
-    dispatchEvent(new CustomEvent('click-ground', { detail }))
-  }
-
   return (
     <React.Suspense fallback={null}>
-      <Environment files={hdr} background={'only'} blur={0.06} />
-      <Environment files={hdr} blur={100} />
-      <ambientLight intensity={0.5} color='gold' />
+      <Environment files={hdr} background blur={0.1} />
+      <ambientLight intensity={3} color='#FF8000' />
       <Effects />
       <CustomDirectionalLight />
       <CustomPerspectiveCamera />
-
-      <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]} visible={false} onClick={onClickGround}>
-        <circleGeometry args={[28, 32]} />
-      </mesh>
 
       <Flies />
 

@@ -1,77 +1,64 @@
-import { PerspectiveCamera, OrbitControls } from '@react-three/drei'
+import { PerspectiveCamera } from '@react-three/drei'
 import { useControls } from 'leva'
-import { Group, Vector3 } from 'three'
-import { PerspectiveCameraProps, useFrame, useThree } from '@react-three/fiber'
+import { Group } from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
+import { lerp } from '@src/utils/utils.ts'
 
 export default function CustomPerspectiveCamera() {
   const controls = useControls(
     'perspectiveCamera',
     {
-      x: { min: -100, max: 100, step: 1, value: 0 },
-      y: { min: -100, max: 100, step: 1, value: 4 },
-      z: { min: -100, max: 100, step: 1, value: 3 },
+      x: { min: -100, max: 100, step: 1, value: -21 },
+      y: { min: -100, max: 100, step: 1, value: 11 },
+      z: { min: -100, max: 100, step: 1, value: 19 },
       near: { min: 0, max: 10, step: 0.01, value: 0.1 },
       far: { min: 0, max: 2000, step: 1, value: 1000 },
       fov: { min: 1, max: 100, step: 1, value: 30 },
-      zoom: { min: 0, max: 10, step: 0.01, value: 1 },
+      zoom: { min: 0, max: 10, step: 0.01, value: 0.4 },
     },
     { collapsed: true },
   )
   const { scene } = useThree()
   const player = useRef<Group>(null!)
-  const ref = useRef<PerspectiveCameraProps>(null!)
-  const currentPosition = useRef(new Vector3())
-  const currentLookat = useRef(new Vector3())
+  const ref = useRef<Group>(null!)
+  const currCameraX = useRef<number>(0)
+  const prevPlayerX = useRef<number>(0)
 
   useEffect(() => {
     const onMainPlayerReady = () => {
-      player.current = scene.getObjectByName('main-player')
+      player.current = scene.getObjectByName('main-player') as Group
+      currCameraX.current = prevPlayerX.current = player.current.position.x
     }
     window.addEventListener('main-player-ready', onMainPlayerReady)
     return () => window.removeEventListener('main-player-player', onMainPlayerReady)
   }, [])
 
-  const calculateIdleOffset = () => {
-    const idealOffset = new Vector3(-1, 8, -17)
-    idealOffset.applyQuaternion(player.current.quaternion)
-    idealOffset.add(player.current.position)
-    return idealOffset
-  }
-
-  const calculateIdealLookat = () => {
-    const idealLookat = new Vector3(1, 0, 20)
-    idealLookat.applyQuaternion(player.current.quaternion)
-    idealLookat.add(player.current.position)
-    return idealLookat
-  }
-
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (!player.current) return
-    const idealOffset = calculateIdleOffset()
-    const idealLookat = calculateIdealLookat()
+    // const t = delta * 2
+    // const playerDiffX = player.current.position.x - prevPlayerX.current
+    // const normalizedPlayerDiffX = playerDiffX / Math.abs(playerDiffX) || 0
+    // const idealX = player.current.position.x + normalizedPlayerDiffX * 4
 
-    const t = 1 - Math.pow(0.001, state.clock.elapsedTime)
+    const t = delta * 5
+    const idealX = player.current.position.x
+    currCameraX.current = lerp(currCameraX.current, idealX, t)
+    ref.current.position.x = currCameraX.current
+    ref.current.lookAt(currCameraX.current, 0, 0)
 
-    currentPosition.current.lerp(idealOffset, t * 0.03)
-    currentLookat.current.lerp(idealLookat, t * 0.03)
-
-    ref.current.position.copy(currentPosition.current)
-    ref.current.lookAt(currentLookat.current)
+    prevPlayerX.current = player.current.position.x
   })
 
   return (
-    <>
-      {/*<OrbitControls enableDamping enableRotate={true} />*/}
-      <PerspectiveCamera
-        ref={ref}
-        makeDefault={true}
-        position={[controls.x, controls.y, controls.z]}
-        fov={controls.fov}
-        near={controls.near}
-        far={controls.far}
-        zoom={controls.zoom}
-      />
-    </>
+    <PerspectiveCamera
+      ref={ref}
+      makeDefault={true}
+      position={[controls.x, controls.y, controls.z]}
+      fov={controls.fov}
+      near={controls.near}
+      far={controls.far}
+      zoom={controls.zoom}
+    />
   )
 }
