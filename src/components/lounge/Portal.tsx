@@ -30,7 +30,7 @@ const PortalMaterial = shaderMaterial(
   {
     time: { value: 0 } as any,
   },
-  /* glsl */ `
+  `
     varying vec3 vPos;
     varying vec3 vNormal;
     varying vec2 vUv;
@@ -43,7 +43,7 @@ const PortalMaterial = shaderMaterial(
         gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
     }
   `,
-  /* glsl */ `
+  `
     varying vec3 vPos;
     varying vec3 vNormal;
     varying vec2 vUv;
@@ -51,13 +51,21 @@ const PortalMaterial = shaderMaterial(
     uniform float time;
     
     void main() {
-        float t = time * 0.002;
-        float v = (1. + pow(sin(t - vUv.y), 25.)) / 3.;
-        float waveAlpha = smoothstep(0.4, 0.8, v) / 2.;
-        float finalWaveAlpha = waveAlpha * (1.0 - smoothstep(0.0, 0.95, vUv.y));
-        gl_FragColor = vec4(.1, .1, .1, finalWaveAlpha);
-        float defaultAlpha = (1. - pow(vUv.y, 2.)) * 0.2;
-        gl_FragColor += vec4(1.0, 0.0, 0.0, defaultAlpha);
+        float t = time * 0.001;
+        
+        // 샤이닝 컬러
+        float shiningAlpha = (1. + sin(10. * (t * 0.7 + 1. - vUv.y))) / 2.;
+        float noEdgeShiningAlpha = shiningAlpha * (1. - vUv.y) * 0.75;
+        vec4 shineColor = vec4(1., 1., 1., noEdgeShiningAlpha);
+        
+        // 줄무니 컬러
+        vec4 lineColor = vec4(1., 0., 0., ((1. + sin(75. * (vUv.x + t / 10.))) / 2.) * (1. - vUv.y));
+        
+        // 베이스 컬러
+        vec4 baseColor = vec4(1., 0., 0., 1. - vUv.y);
+        
+        gl_FragColor = mix(baseColor, lineColor + shineColor * 0.8, 0.85);
+        // gl_FragColor = shineColor;
     }
   `,
 )

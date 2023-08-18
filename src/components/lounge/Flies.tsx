@@ -64,8 +64,6 @@ class FireFly {
     this.opacityDelta = randomNumBetween(0.3, 1)
     this.mesh = new THREE.Sprite()
     this.material = new THREE.SpriteMaterial()
-
-    this.create()
   }
 
   getRandomPosition(): THREE.Vector3 {

@@ -7,6 +7,7 @@ import Player from '@src/components/lounge/Player.tsx'
 import Effects from '@src/components/lounge/Effects.tsx'
 import Table from '@src/components/lounge/Table.tsx'
 import Flies from '@src/components/lounge/Flies.tsx'
+import Footprints from '@src/components/lounge/FootPrints.tsx'
 
 export default function Scene() {
   return (
@@ -16,16 +17,12 @@ export default function Scene() {
       <Effects />
       <CustomDirectionalLight />
       <CustomPerspectiveCamera />
+      {/*<StatsGl />*/}
 
       <Flies />
-
-      <React.Suspense fallback={null}>
-        <Table />
-      </React.Suspense>
-
-      <React.Suspense fallback={null}>
-        <Player />
-      </React.Suspense>
+      <Table />
+      <Player />
+      <Footprints />
     </React.Suspense>
   )
 }

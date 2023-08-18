@@ -18,7 +18,7 @@ export default function Player() {
   const [animationState, setAnimationState] = useState<string>(names[4])
 
   useEffect(() => {
-    actions[names[9]]?.setDuration(0.4)
+    actions[names[9]]?.setDuration(0.5)
     actions[names[4]]?.reset().play()
     object.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -34,6 +34,15 @@ export default function Player() {
       .stop()
     actions[animationState]?.fadeIn(0.1).play()
     prevAnimationState.current = animationState
+  }, [animationState])
+
+  useEffect(() => {
+    if (animationState !== names[9]) return
+    const intervalId = setInterval(() => {
+      dispatchEvent(new Event('create-footprint'))
+    }, 200)
+
+    return () => clearInterval(intervalId)
   }, [animationState])
 
   useEffect(() => {
@@ -64,7 +73,7 @@ export default function Player() {
       const targetQuaternion = new THREE.Quaternion().setFromUnitVectors(initialDirection, targetDirection)
       ref.current.quaternion.slerp(targetQuaternion, t * 0.1)
     } else {
-      setAnimationState(names[4])
+      animationState !== names[4] && setAnimationState(names[4])
     }
   })
 

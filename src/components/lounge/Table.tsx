@@ -1,11 +1,14 @@
-import { Text, useGLTF } from '@react-three/drei'
-import glb from '@static/media/models/table.glb?url'
 import { useEffect, useRef } from 'react'
+import { Text, useGLTF, useVideoTexture } from '@react-three/drei'
+import glb from '@static/media/models/table.glb?url'
 import { RootState, useFrame } from '@react-three/fiber'
 import Portal from '@src/components/lounge/Portal.tsx'
 import font from '@static/fonts/SUIT-Medium.woff'
 import { ThreeEvent } from '@react-three/fiber/dist/declarations/src/core/events'
 import * as THREE from 'three'
+import PortalScreen from '@src/components/lounge/PortalScreen.tsx'
+import testVideo1 from '@static/media/videos/texture.lotte.1.mp4'
+import testVideo2 from '@static/media/videos/texture.lotte.2.mp4'
 
 useGLTF.preload(glb)
 
@@ -14,6 +17,9 @@ interface ClickGroundDetail {
 }
 
 export default function Table() {
+  const videoTexture1: THREE.VideoTexture = useVideoTexture(testVideo1)
+  const videoTexture2: THREE.VideoTexture = useVideoTexture(testVideo2)
+
   const { scene, nodes }: any = useGLTF(glb)
   const horse = useRef(nodes['Horse'])
   useEffect(() => {
@@ -46,15 +52,17 @@ export default function Table() {
           visible={false}
         />
       </primitive>
-      <Portal position={[30, 1, 2]}>
+      <Portal position={[30, 1, 7]}>
         <Text font={font} fontSize={1} position={[0, 0, 4]}>
           눈싸움 미니게임
         </Text>
+        <PortalScreen src={videoTexture1} position={[0, 10, -5]} />
       </Portal>
       <Portal position={[-16, 1, 8]}>
         <Text font={font} fontSize={1} position={[0, 0, 4]}>
           썰매타기 미니게임
         </Text>
+        <PortalScreen src={videoTexture2} position={[0, 10, -5]} />
       </Portal>
     </group>
   )
