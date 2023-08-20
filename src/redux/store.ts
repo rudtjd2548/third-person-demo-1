@@ -1,15 +1,16 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import loungeReducer from '@src/redux/reducer/lounge.ts'
+import questReducer from '@src/redux/reducer/quest.ts'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 const rootReducer = combineReducers({
-  lounge: loungeReducer
+  lounge: loungeReducer,
+  quest: questReducer,
 })
 
-export const store =  configureStore({
+export const store = configureStore({
   reducer: rootReducer,
 })
-
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

@@ -7,8 +7,8 @@ import font from '@static/fonts/SUIT-Medium.woff'
 import { ThreeEvent } from '@react-three/fiber/dist/declarations/src/core/events'
 import * as THREE from 'three'
 import PortalScreen from '@src/components/lounge/PortalScreen.tsx'
-import testVideo1 from '@static/media/videos/texture.lotte.1.mp4'
-import testVideo2 from '@static/media/videos/texture.lotte.2.mp4'
+import testVideo1 from '@static/media/videos/letsee.everland.mp4'
+import testVideo2 from '@static/media/videos/letsee.lotte.jollycatch.mp4'
 
 useGLTF.preload(glb)
 
