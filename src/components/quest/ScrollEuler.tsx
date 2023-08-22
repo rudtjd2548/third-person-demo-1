@@ -21,7 +21,7 @@ export default function ScrollEuler() {
         <div
           ref={bar}
           style={{ left: scroll.percent * 100 + '%' }}
-          className='absolute bottom-[100%] w-[4px] h-[1rem] transform translate-x-[-1px] rounded-2xl bg-[#ffffff] opacity-50'
+          className='absolute bottom-[100%] w-[4px] h-[1rem] transform translate-x-[-1px] rounded-md bg-[#fff] opacity-70'
         />
       </div>
     </div>

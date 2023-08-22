@@ -4,7 +4,8 @@ import { extend, ReactThreeFiber, useFrame } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { lerp } from '@src/utils/utils.ts'
-import { useAppSelector } from '@src/redux/store.ts'
+import { useAppDispatch, useAppSelector } from '@src/redux/store.ts'
+import { setScrollAction } from '@src/redux/reducer/quest.ts'
 
 interface CardProps {
   index: number
@@ -18,6 +19,7 @@ export default function Card({ index }: CardProps) {
   const imageTexture: THREE.Texture = useTexture(image)
   const ref = useRef<THREE.Mesh>(null!)
   const [hovered, setHover] = useState(false)
+  const dispatch = useAppDispatch()
   useCursor(hovered)
 
   const targetX = useRef<number>(5 * index!)
@@ -44,12 +46,21 @@ export default function Card({ index }: CardProps) {
     uniforms.time.value = state.clock.elapsedTime
   })
 
+  const onClickCard = () => {
+    const percent = index / (data.length - 1)
+
+    const scrollHandler = document.getElementById('scroll-handler')
+    if (scrollHandler) scrollHandler.scrollLeft = (scrollHandler.scrollWidth - innerWidth) * percent
+    dispatch(setScrollAction(percent))
+  }
+
   return (
     <mesh
       ref={ref}
       position={[5 * index, 4, 0]}
       onPointerOver={() => setHover(true)}
       onPointerOut={() => setHover(false)}
+      onClick={onClickCard}
     >
       <planeGeometry args={[width, width * 1.618]} />
       <cardMaterial

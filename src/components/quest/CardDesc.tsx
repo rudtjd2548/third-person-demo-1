@@ -25,16 +25,13 @@ export default function CardDesc() {
       <Text
         font={font}
         fontSize={0.4}
-        position={[-2, -1.7, 0]}
+        position={[-2, -1.75, 0]}
         color='#aaa'
         textAlign='left'
         anchorX='left'
         anchorY='top'
       >
         {currData.partner}
-      </Text>
-      <Text font={font} fontSize={0.3} position={[-2, -2.4, 0]} color='#aaa' anchorX='left' anchorY='top'>
-        {currData.desc}
       </Text>
     </group>
   )

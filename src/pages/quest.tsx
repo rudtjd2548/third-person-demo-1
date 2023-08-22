@@ -1,27 +1,24 @@
 import { Canvas } from '@react-three/fiber'
 import { Leva } from 'leva'
 import Scene from '@src/components/quest/Scene.tsx'
-import Letsee from '@src/components/quest/Letsee.tsx'
-import { PerspectiveCamera } from '@react-three/drei'
-import letseeLogo from '/static/media/images/letsee-logo@2x.png'
 import ScrollEuler from '@src/components/quest/ScrollEuler.tsx'
-import React from 'react'
 import ScrollHandler from '@src/components/quest/ScrollHandler.tsx'
+import LogoScene from '@src/components/quest/LogoScene.tsx'
+import letseeLogo from '/static/media/images/letsee-logo@2x.png'
 
 export default function QuestPage() {
   return (
     <div className='h-full bg-black'>
+      {/* 메인 캔버스 */}
       <Canvas id='quest-canvas' gl={{ antialias: false }} camera={{ position: [0, 5, 10] }} shadows dpr={[1, 1.5]}>
         <Scene />
       </Canvas>
       <Leva collapsed={true} hidden={false} />
 
-      <div className='absolute left-0 bottom-0 w-[20vmin] h-[20vmin] min-w-[100px] min-h-[100px] max-w-[180px] max-h-[180px] border-[0px] border-amber-200'>
+      {/* 미니 캔버스 */}
+      <div className='absolute left-0 bottom-0 w-[20vmin] h-[20vmin] min-w-[100px] min-h-[100px] max-w-[180px] max-h-[180px]'>
         <Canvas id='quest-canvas-2' dpr={[1, 1.5]}>
-          <React.Suspense>
-            <PerspectiveCamera position={[0, 2.5, 12]} makeDefault={true} />
-            <Letsee />
-          </React.Suspense>
+          <LogoScene />
         </Canvas>
       </div>
 
@@ -33,6 +30,7 @@ export default function QuestPage() {
         <span className='text-xs text-gray-500'>Copyright © 2023</span>
       </footer>
 
+      {/* 스크롤 핸들러 */}
       <ScrollHandler />
     </div>
   )

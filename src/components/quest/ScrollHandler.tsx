@@ -43,7 +43,11 @@ export default function ScrollHandler() {
   }, [data])
 
   return (
-    <div ref={ref} className='absolute z-10 top-0 left-0 w-[100%] h-[100%] overflow-hidden pointer-events-none'>
+    <div
+      id='scroll-handler'
+      ref={ref}
+      className='absolute z-10 top-0 left-0 w-[100%] h-[100%] overflow-hidden pointer-events-none'
+    >
       <div ref={pageRef} className={`h-[100%] pointer-events-none`} />
     </div>
   )

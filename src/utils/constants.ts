@@ -10,7 +10,7 @@ export const cardData = [
     src: lotteJollycatch,
     title: '졸리캐치',
     date: '2022.12',
-    partner: 'Lotte',
+    partner: '롯데백화점',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
   },
   {
@@ -22,7 +22,7 @@ export const cardData = [
   },
   {
     src: everland,
-    title: '에버랜드',
+    title: '에버타운',
     date: '2023.03',
     partner: '삼성물산',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
@@ -31,14 +31,14 @@ export const cardData = [
     src: lottePopcard,
     title: 'AR 팝업카드',
     date: '2023.01',
-    partner: 'Lotte',
+    partner: '롯데백화점',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
   },
   {
     src: megacoffee,
     title: '손흥민 AR',
     date: '2022.11',
-    partner: 'Megacoffee',
+    partner: 'MEGACOFFEE',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
   },
   {
