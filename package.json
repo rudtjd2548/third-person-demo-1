@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "watch": "tsc && vite build --watch --mode intra",
+    "demo": "tsc && vite build --mode demo",
     "build": "tsc && vite build --mode github-actions-build",
     "prod": "tsc && vite build --mode github-actions-prod",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -35,8 +36,10 @@
     "three.meshline": "^1.4.0"
   },
   "devDependencies": {
+    "@types/node": "^20.5.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/react-transition-group": "^4.4.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",

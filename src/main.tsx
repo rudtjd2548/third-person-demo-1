@@ -8,7 +8,7 @@ import '@src/global.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
       <React.Suspense fallback={''}>
         <App />
       </React.Suspense>

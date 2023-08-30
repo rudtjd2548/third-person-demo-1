@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin } from 'vite'
+import {defineConfig, loadEnv, splitVendorChunkPlugin} from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import viteCompression from 'vite-plugin-compression'
@@ -7,8 +7,17 @@ import { visualizer } from 'rollup-plugin-visualizer'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'github-actions-prod' || mode === 'github-actions-build'
+  const { base, baseAssets } = getBasename(mode)
+  process.env = {
+    ...process.env,
+    ...loadEnv(mode, process.cwd(), ''),
+    BASE_URL: base,
+    VITE_BASE_URL: base,
+    VITE_BASE_ASSETS_URL: baseAssets,
+  }
 
   return {
+    base: baseAssets,
     server: {
       host: '0.0.0.0',
       port: 8081,
@@ -56,3 +65,29 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
+
+// 개발 모드에 따라 basename 을 리턴
+function getBasename(mode) {
+  switch (mode) {
+    case 'demo':
+      return {
+        base: '/react/tonttu/',
+        baseAssets: '/react/tonttu/',
+      }
+    case 'github-actions-build':
+      return {
+        base: '/',
+        baseAssets: '/',
+      }
+    case 'github-actions-prod':
+      return {
+        base: '/',
+        baseAssets: '/',
+      }
+    default:
+      return {
+        base: '/',
+        baseAssets: '/',
+      }
+  }
+}

@@ -52,7 +52,7 @@ const HologramMaterial: any = shaderMaterial(
       float alpha = 3.5 - (sin(300.0 * vUv.x) + 1.0) * ((sin(300.0 * vUv.y) + 1.0));
       alpha = 1.0 - clamp(alpha, 0.0, 1.0);
 
-      gl_FragColor = vec4(0.0, 1.0, 0.6, alpha);
+      gl_FragColor = vec4(0.0, 0.8, 1.0, alpha);
     }  
   `,
 )
@@ -135,7 +135,7 @@ const LogoSphereMaterial: any = shaderMaterial(
       dotAlpha = 1.0 - clamp(dotAlpha, 0.0, 1.0);
       float finalAlpha = mix(0., fresnelNoiseAlpha, dotAlpha);
   
-      gl_FragColor = vec4(0.0, 1.0, 0.6, finalAlpha);
+      gl_FragColor = vec4(0.0, 0.8, 1.0, finalAlpha);
     }  
   `,
 )

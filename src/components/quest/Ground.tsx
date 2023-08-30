@@ -17,6 +17,7 @@ export default function Ground() {
         maxDepthThreshold={8}
         mixStrength={0.5}
         mixContrast={1}
+        color='#00FFFF'
       />
     </mesh>
   )
