@@ -1,13 +1,16 @@
 import { Suspense } from 'react'
-import { Preload } from '@react-three/drei'
-import WaterFloor from "@src/components/quest2/WaterFloor.tsx";
-import CustomDirectionalLight from "@src/components/quest2/DirectionalLight.tsx";
-import TestBox from "@src/components/quest2/TestBox.tsx";
+import { Environment, Preload } from '@react-three/drei'
+import WaterFloor from '@src/components/quest2/WaterFloor.tsx'
+import CustomDirectionalLight from '@src/components/quest2/DirectionalLight.tsx'
+import TestBox from '@src/components/quest2/TestBox.tsx'
+import Effects from '@src/components/quest2/Effects.tsx'
 
 export default function Scene() {
   return (
     <Suspense fallback={null}>
-      <color attach='background' args={['#f1f1f1']} />
+      <Effects />
+      <color attach='background' args={['#444']} />
+      <Environment preset='warehouse' background={'only'} />
       <CustomDirectionalLight />
       <Suspense>
         <WaterFloor />
@@ -22,4 +25,3 @@ export default function Scene() {
     </Suspense>
   )
 }
-

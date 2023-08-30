@@ -1,112 +1,115 @@
-import {useMemo, useRef} from 'react'
-import {shaderMaterial, useTexture} from "@react-three/drei";
-import gridImage from "@static/media/images/texture.grid.png";
-import {extend, ReactThreeFiber, useFrame, useThree} from "@react-three/fiber"
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import {classicPerlin3DNoise} from "@src/utils/glsl.ts";
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js'
+import { useControls } from 'leva'
+import { useTexture } from '@react-three/drei'
+import dudvImg from '/static/media/images/4141-normal.jpg'
+import { useFrame } from '@react-three/fiber'
 
 export default function WaterFloor() {
-  const texture = useTexture(gridImage)
-  const ref = useRef<THREE.Mesh>(null!)
-  const shaderRef = useRef(null!)
+  const dudvMap = useTexture(dudvImg)
+  dudvMap.wrapS = dudvMap.wrapT = THREE.RepeatWrapping
+  const ref = useRef<THREE.Group>(null!)
+  const controls = useControls(
+    'mirror',
+    {
+      color: '#fff',
+      clipBias: { min: 0, max: 0.1, step: 0.001, value: 0 },
+      waveStrength: { min: 0, max: 1, step: 0.01, value: 0.04 },
+      waveSpeed: { min: 0, max: 1, step: 0.01, value: 0.15 },
+    },
+    { collapsed: true },
+  )
 
-  const onBeforeCompile = useMemo(() => {
-    return (shader) => {
-      shader.uniforms.time = { value: 0 }
+  useEffect(() => {
+    const customShader = {
+      uniforms: {
+        color: { value: null },
+        tDiffuse: { value: null },
+        textureMatrix: { value: null },
+        tDudv: { value: dudvMap },
+        time: { value: 0 },
+      },
+      vertexShader: `
+        uniform mat4 textureMatrix;
+        varying vec4 vUv;
+  
+        #include <common>
+        #include <logdepthbuf_pars_vertex>
+  
+        void main() {
+          vUv = textureMatrix * vec4( position, 1.0 );
+  
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+  
+          #include <logdepthbuf_vertex>
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color;
+        uniform sampler2D tDiffuse;
+        uniform sampler2D tDudv;
+        uniform float time;
+        varying vec4 vUv;
+  
+        #include <logdepthbuf_pars_fragment>
+  
+        float blendOverlay( float base, float blend ) {
+          return( base < 0.5 ? ( 2.0 * base * blend ) : ( 1.0 - 2.0 * ( 1.0 - base ) * ( 1.0 - blend ) ) );
+        }
+  
+        vec3 blendOverlay( vec3 base, vec3 blend ) {
+          return vec3( blendOverlay( base.r, blend.r ), blendOverlay( base.g, blend.g ), blendOverlay( base.b, blend.b ) );
+        }
+  
+        void main() {
+          #include <logdepthbuf_fragment>
+          
+          float waveStrength = ${controls.waveStrength};
+          float waveSpeed = ${controls.waveSpeed};
 
-      shader.vertexShader = shader.vertexShader.replace(
-        `#include <uv_pars_vertex>`,
-        `varying vec2 vUv;
-    uniform float time;`
-      );
+          vec2 distortedUv = texture2D( tDudv, vec2( vUv.x + time * waveSpeed, vUv.y ) ).rg * waveStrength;
+          distortedUv = vUv.xy + vec2( distortedUv.x, distortedUv.y - time * waveSpeed );
+          vec2 distortion = ( texture2D( tDudv, distortedUv ).rg * 2.0 - 1.0 ) * waveStrength;
 
-      shader.vertexShader = shader.vertexShader.replace(
-        `#include <uv_vertex>`,
-        `vUv = uv;`
-      );
-
-      shader.vertexShader = shader.vertexShader.replace(
-        '#include <begin_vertex>',
-        `
-      vec3 newPosition = position;
-      newPosition.z = 0.015 * sin(100. * (-0.5 * vUv.y - vUv.x) + 10. * time);
-      
-      vec3 transformed = newPosition;
-      
-      // gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-    `
-      )
-      shader.fragmentShader = `
-    varying vec2 vUv;
-    uniform float time;
-  ` + shader.fragmentShader
-
-      shaderRef.current = shader
+          vec4 uv = vec4( vUv );
+          uv.xy += distortion;
+  
+          vec4 base = texture2DProj( tDiffuse, uv );
+          vec4 water = vec4( blendOverlay( base.rgb, color ), 1.0 );
+          
+          vec4 colorBase = vec4(vec3(distortedUv.rg, 0.), 1.);
+          
+          gl_FragColor = mix(base, water, 1.0);
+  
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }
+      `,
     }
-  }, [])
+
+    const geometry = new THREE.PlaneGeometry(500, 500)
+    const reflector = new Reflector(geometry, {
+      color: controls.color,
+      clipBias: controls.clipBias,
+      shader: customShader,
+    })
+    reflector.rotation.x = -Math.PI / 2
+    ref.current.add(reflector)
+
+    return () => {
+      geometry.dispose()
+      reflector.dispose()
+      ref.current?.remove(reflector)
+    }
+  }, [controls])
 
   useFrame((state) => {
-    if (!shaderRef.current) return
-    const { uniforms }: any = shaderRef.current
+    const reflector: any = ref.current.children[0]
+    if (!reflector) return
+    const { uniforms }: any = reflector.material
     uniforms.time.value = state.clock.elapsedTime
   })
 
-  return (
-    <mesh ref={ref} position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={true}>
-      <planeGeometry args={[10, 10, 100, 100]} />
-      <meshPhysicalMaterial color='pink' reflectivity={1} metalness={0.5} roughness={0} clearcoat={1} transparent={true} side={THREE.DoubleSide} onBeforeCompile={onBeforeCompile} />
-      {/*<waterFloorMaterial key={WaterFloorMaterial.key} imageTexture={texture} side={THREE.DoubleSide} />*/}
-    </mesh>
-  )
+  return <group ref={ref} />
 }
-
-const WaterFloorMaterial = shaderMaterial(
-  {
-    time: 0,
-    imageTexture: null
-  },
-  `
-    varying vec2 vUv;
-    uniform float time;
-    
-    void main() {
-      vUv = uv;
-      
-      vec3 newPosition = position;
-      newPosition.z = 0.015 * sin(100. * (-0.5 * vUv.y - vUv.x) + 10. * time);
-      
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-    }
-  `,
-  `
-    varying vec2 vUv;
-    uniform float time;
-    uniform sampler2D imageTexture;
-    
-    ${classicPerlin3DNoise}
-      
-    void main() {
-      float t = time * 1.5;
-    
-      float uvX = vUv.x;
-      float uvY = vUv.y;
-      
-      vec4 imageColor = texture2D(imageTexture, vec2(uvX, uvY));
-      vec4 baseColor = vec4(0.0, 0.8, 1.0, 1.0);
-      gl_FragColor = mix(baseColor, imageColor, 0.5);
-    }
-  `
-)
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      waterFloorMaterial: ReactThreeFiber.Node<
-        typeof WaterFloorMaterial & JSX.IntrinsicElements['shaderMaterial'],
-        typeof WaterFloorMaterial
-      >
-    }
-  }
-}
-
-extend({ WaterFloorMaterial })

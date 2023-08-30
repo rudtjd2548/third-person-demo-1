@@ -1,4 +1,4 @@
-import {defineConfig, loadEnv, splitVendorChunkPlugin} from 'vite'
+import { defineConfig, loadEnv, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import viteCompression from 'vite-plugin-compression'
@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
           brotliSize: true,
         }),
     ],
-    assetsInclude: ['**/*.glb', '**/*.usdz', '**/*.hdr', '**/*.exr'],
+    assetsInclude: ['**/*.glb', '**/*.usdz', '**/*.hdr', '**/*.exr', '**/*.ktx2'],
     build: {
       outDir: 'build',
       rollupOptions: {
@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: 'static/js/[name]-[hash].js',
           assetFileNames: (assetInfo) => {
             let extType = assetInfo.name.split('.').pop()
-            if (/png|svg|jpe?g|ico|gif|hdr|exr/i.test(extType)) {
+            if (/png|svg|jpe?g|ico|gif|hdr|exr|ktx2/i.test(extType)) {
               extType = 'media/images'
             } else if (/glb|usdz/i.test(extType)) {
               extType = 'media/models'
