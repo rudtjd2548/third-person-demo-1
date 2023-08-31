@@ -16,7 +16,7 @@ export default function TestBox({ ...props }: TestBoxProps) {
   return (
     <mesh ref={ref} {...props} castShadow={true}>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
-      <meshStandardMaterial color='orange' />
+      <meshBasicMaterial color='#ff0000' />
     </mesh>
   )
 }

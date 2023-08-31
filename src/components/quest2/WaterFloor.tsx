@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js'
 import { useControls } from 'leva'
 import { useTexture } from '@react-three/drei'
-import dudvImg from '/static/media/images/4141-normal.jpg'
+import dudvImg from '/static/media/images/waternormals.jpeg'
 import { useFrame } from '@react-three/fiber'
 
 export default function WaterFloor() {
@@ -15,8 +15,8 @@ export default function WaterFloor() {
     {
       color: '#fff',
       clipBias: { min: 0, max: 0.1, step: 0.001, value: 0 },
-      waveStrength: { min: 0, max: 1, step: 0.01, value: 0.04 },
-      waveSpeed: { min: 0, max: 1, step: 0.01, value: 0.15 },
+      waveStrength: { min: 0, max: 1, step: 0.01, value: 0.015 },
+      waveSpeed: { min: 0, max: 1, step: 0.01, value: 0.10 },
     },
     { collapsed: true },
   )
@@ -68,19 +68,23 @@ export default function WaterFloor() {
           float waveStrength = ${controls.waveStrength};
           float waveSpeed = ${controls.waveSpeed};
 
-          vec2 distortedUv = texture2D( tDudv, vec2( vUv.x + time * waveSpeed, vUv.y ) ).rg * waveStrength;
-          distortedUv = vUv.xy + vec2( distortedUv.x, distortedUv.y - time * waveSpeed );
-          vec2 distortion = ( texture2D( tDudv, distortedUv ).rg * 2.0 - 1.0 ) * waveStrength;
+          vec2 distortedUv = texture2D( tDudv, vec2( vUv.x, vUv.y ) ).rg * waveStrength;
+          distortedUv = vUv.xy + vec2( distortedUv.x + time * waveSpeed * 2., distortedUv.y - time * waveSpeed );
+          distortedUv.x *= 0.2;
+          distortedUv.y *= 0.3;
+          vec2 distortion = ( texture2D( tDudv, distortedUv ).rg * 7.0 - 1.0 ) * waveStrength;
 
           vec4 uv = vec4( vUv );
           uv.xy += distortion;
   
           vec4 base = texture2DProj( tDiffuse, uv );
-          vec4 water = vec4( blendOverlay( base.rgb, color ), 1.0 );
+          vec4 water = vec4( blendOverlay( base.rgb, color ) * 0.4, 1.0 );
+          water.rb *= 1.1;
           
-          vec4 colorBase = vec4(vec3(distortedUv.rg, 0.), 1.);
+          vec4 colorBase = vec4(vec3(distortion.g * 10.), 1.) * 3.;
+          colorBase.b *= 1.2;
           
-          gl_FragColor = mix(base, water, 1.0);
+          gl_FragColor = mix(colorBase, water, 0.9);
   
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
@@ -88,7 +92,7 @@ export default function WaterFloor() {
       `,
     }
 
-    const geometry = new THREE.PlaneGeometry(500, 500)
+    const geometry = new THREE.PlaneGeometry(100, 30, 1, 1)
     const reflector = new Reflector(geometry, {
       color: controls.color,
       clipBias: controls.clipBias,

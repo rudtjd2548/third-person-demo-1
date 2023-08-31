@@ -1,3 +1,13 @@
+import {KTX2Loader} from "three/examples/jsm/loaders/KTX2Loader";
+
+const ktx2Loader = new KTX2Loader()
+ktx2Loader.setTranscoderPath(`/static/lib/basis/`) //basis_transcoder.js
+
+export function getKtx2Loader(renderer) {
+  renderer && ktx2Loader.detectSupport(renderer)
+  return ktx2Loader
+}
+
 export const randomNumBetween = (min: number, max: number) => {
   return Math.random() * (max - min) + min
 }
