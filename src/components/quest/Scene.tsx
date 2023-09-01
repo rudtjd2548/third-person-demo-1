@@ -6,6 +6,7 @@ import Effects from '@src/components/quest/Effects.tsx'
 import CardGroup from '@src/components/quest/CardGroup.tsx'
 
 export default function Scene() {
+
   return (
     <React.Suspense fallback={null}>
       <CameraControl />
