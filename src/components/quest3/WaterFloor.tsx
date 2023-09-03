@@ -15,8 +15,8 @@ export default function WaterFloor() {
     {
       color: '#fff',
       clipBias: { min: 0, max: 0.1, step: 0.001, value: 0 },
-      waveStrength: { min: 0, max: 1, step: 0.01, value: 0.03 },
-      waveSpeed: { min: 0, max: 1, step: 0.01, value: 0.03 },
+      waveStrength: { min: 0, max: 1, step: 0.01, value: 0.05 },
+      waveSpeed: { min: 0, max: 1, step: 0.01, value: 0.3 },
     },
     { collapsed: true },
   )
@@ -29,10 +29,13 @@ export default function WaterFloor() {
         textureMatrix: { value: null },
         tDudv: { value: dudvMap },
         time: { value: 0 },
+        angle: { value: 0 },
       },
       vertexShader: `
         uniform mat4 textureMatrix;
         varying vec4 vUv;
+        uniform float time;
+        uniform float angle;
   
         #include <common>
         #include <logdepthbuf_pars_vertex>
@@ -51,6 +54,7 @@ export default function WaterFloor() {
         uniform sampler2D tDudv;
         uniform float time;
         varying vec4 vUv;
+        uniform float angle;
   
         #include <logdepthbuf_pars_fragment>
   
@@ -65,22 +69,27 @@ export default function WaterFloor() {
         void main() {
           #include <logdepthbuf_fragment>
           
+          float sin_factor = sin(angle);
+          float cos_factor = cos(angle);
+          
           float waveStrength = ${controls.waveStrength};
           float waveSpeed = ${controls.waveSpeed};
-
           vec2 distortedUv = texture2D( tDudv, vec2( vUv.x, vUv.y ) ).rg * waveStrength;
-          distortedUv = vUv.xy + vec2( distortedUv.x + time * waveSpeed * 2., distortedUv.y - time * waveSpeed );
-          distortedUv.x *= 0.5;
-          distortedUv.y *= 0.5;
+          vec2 vv = vUv.xy;
+          vv.x -= 3.8;
+          vv.y -= 1.5;
+          vv = vv * mat2(cos_factor, sin_factor, -sin_factor, cos_factor);
+          distortedUv = vv + vec2( distortedUv.x, distortedUv.y - time * waveSpeed );
+          
           vec2 distortion = ( texture2D( tDudv, distortedUv ).rg * 7.0 - 1.0 ) * waveStrength;
 
           vec4 uv = vec4( vUv );
           uv.xy += distortion;
   
           vec4 base = texture2DProj( tDiffuse, uv );
-          vec4 water = vec4( blendOverlay( base.rgb, color ) * 1.0, 1.0 );
+          vec4 water = vec4( blendOverlay( base.rgb, color ) * 0.555, 1.0 );
           
-          vec4 colorBase = vec4(vec3(distortion.g * 0.05), 1.);
+          vec4 colorBase = vec4(vec3(distortion.g * -0.302), 1.);
           
           gl_FragColor = mix(colorBase, vec4(1.0), water);
   
@@ -90,7 +99,7 @@ export default function WaterFloor() {
       `,
     }
 
-    const geometry = new THREE.PlaneGeometry(100, 30, 1, 1)
+    const geometry = new THREE.CircleGeometry(100, 30)
     const reflector = new Reflector(geometry, {
       color: controls.color,
       clipBias: controls.clipBias,
@@ -113,5 +122,5 @@ export default function WaterFloor() {
     uniforms.time.value = state.clock.elapsedTime
   })
 
-  return <group ref={ref} />
+  return <group ref={ref} name='water-floor' />
 }

@@ -10,7 +10,7 @@ export default function CustomDirectionalLight({ ...props }) {
       x: { min: -50, max: 50, step: 0.01, value: 1 },
       y: { min: -50, max: 50, step: 0.01, value: 5 },
       z: { min: -50, max: 50, step: 0.01, value: 1 },
-      intensity: { min: 0, max: 10, step: 0.01, value: 2 },
+      intensity: { min: 0, max: 10, step: 0.01, value: 0.9 },
       color: '#000',
       camera: { min: 0, max: 1000, step: 0.01, value: 10 },
       near: { min: 0, max: 10, step: 0.01, value: 0.01 },

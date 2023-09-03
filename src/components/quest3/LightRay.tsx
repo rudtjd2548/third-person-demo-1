@@ -15,8 +15,8 @@ export default function LightRay() {
   })
 
   return (
-    <mesh ref={ref} position={[0, 0, 0]} rotation={[-Math.PI, Math.PI, 0]}>
-      <cylinderGeometry args={[2, 1, 10, 16, 1, true]} />
+    <mesh ref={ref} position={[0, 2.1, 0]} rotation={[0, 0, 0]}>
+      <cylinderGeometry args={[2.2, 1.77, 2.5, 16, 1, true]} />
       <lightRayMaterial
         key={LightRayMaterial.key}
         imageTexture={imageTexture}
@@ -57,15 +57,15 @@ const LightRayMaterial: any = shaderMaterial(
     uniform sampler2D imageTexture;
   
     void main() {
-      float t = time * 0.01;
+      float t = time * 0.02;
     
-      vec2 imageColor = texture2D(imageTexture, vec2(t, vUv.x)).xy;
-      imageColor *= 0.3;
-      imageColor += 0.3;
+      vec2 imageColor = texture2D(imageTexture, vec2(t, vUv.x)).xx;
+      imageColor *= 0.7;
+      imageColor += 0.5;
     
-      float value = smoothstep(0.0, 2.5, imageColor.x - vUv.y);
+      float value = smoothstep(0.0, 1.0, imageColor.x - vUv.y) * 0.5;
 
-      gl_FragColor = vec4(1.0, 1.0, 1.0, value);
+      gl_FragColor = vec4(0.4, 0.45, 1.0, value);
     }  
   `,
 )

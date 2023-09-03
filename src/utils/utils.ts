@@ -1,9 +1,9 @@
-import {KTX2Loader} from "three/examples/jsm/loaders/KTX2Loader";
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader'
 
 const ktx2Loader = new KTX2Loader()
 ktx2Loader.setTranscoderPath(`/static/lib/basis/`) //basis_transcoder.js
 
-export function getKtx2Loader(renderer) {
+export function getKtx2Loader(renderer: any) {
   renderer && ktx2Loader.detectSupport(renderer)
   return ktx2Loader
 }
