@@ -1,5 +1,5 @@
 import { Suspense, useLayoutEffect } from 'react'
-import {AdaptiveDpr, AdaptiveEvents, Environment, Preload} from '@react-three/drei'
+import { AdaptiveDpr, AdaptiveEvents, Preload } from '@react-three/drei'
 import CustomDirectionalLight from '@src/components/quest3/DirectionalLight.tsx'
 import WaterFloor from '@src/components/quest3/WaterFloor.tsx'
 import { useThree } from '@react-three/fiber'
@@ -9,9 +9,9 @@ import Logo from '@src/components/quest3/Logo.tsx'
 import CameraControl from '@src/components/quest3/CameraControl.tsx'
 import Machines from '@src/components/quest3/Machines.tsx'
 import Flies from '@src/components/quest3/Flies.tsx'
-import SkyDom from "@src/components/quest3/SkyDom.tsx";
-import DashedLineGuide from "@src/components/quest3/DashedLineGuide.tsx";
-import LineBox from "@src/components/quest3/LineBox.tsx";
+import SkyDom from '@src/components/quest3/SkyDom.tsx'
+import DashedLineGuide from '@src/components/quest3/DashedLineGuide.tsx'
+import DecoObjects from '@src/components/quest3/DecoObjects.tsx'
 
 export default function Scene() {
   const { camera } = useThree()
@@ -24,10 +24,10 @@ export default function Scene() {
     <Suspense fallback={null}>
       <fogExp2 attach='fog' args={['#000', 0.03]} />
       <CustomDirectionalLight />
-      <Environment preset={'night'} blur={100} />
+      {/*<Environment preset={'night'} blur={100} />*/}
       <Effects />
 
-      <LineBox />
+      <DecoObjects />
 
       <Suspense>
         <Logo />
