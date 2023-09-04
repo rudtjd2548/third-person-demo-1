@@ -1,3 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+.text-clamp-1 {
+  font-size: clamp(10px, 2vmin, 15px);
+}

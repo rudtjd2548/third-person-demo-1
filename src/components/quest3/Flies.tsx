@@ -2,15 +2,13 @@ import { useLayoutEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { randomNumBetween } from '@src/utils/utils.ts'
 import { shaderMaterial } from '@react-three/drei'
-// import particleImage from '/static/media/images/particle.png'
 import { cp_noise } from '@src/utils/glsl.ts'
 import { extend, ReactThreeFiber, useFrame } from '@react-three/fiber'
 
-const count = 2000
-const radius = [5, 17]
+const count = 1000
+const radius = [5, 50]
 
 export default function Flies() {
-  // const texture = useTexture(particleImage)
   const ref = useRef<THREE.Mesh>(null!)
 
   useLayoutEffect(() => {
@@ -104,7 +102,7 @@ const FliesMaterial: any = shaderMaterial(
     float dist = distance(vUv.xy, vec2(0.5));
     float d = clamp(0.5 - dist, 0., 1.);
     float small_d = step((dist - 0.5), -0.44);
-    vec4 baseColor = mix(vec4(0.1, 0.5, 1., d * 1.0), vec4(small_d), 0.2);
+    vec4 baseColor = mix(vec4(0.1, 0.5, 1., d * 1.0), vec4(small_d), 0.5);
     gl_FragColor = baseColor;
     gl_FragColor.a *= 0.1 + clamp(1. - (sin(1000. * particle_size + 5. * t) + 1.), 0., 0.9);
   }

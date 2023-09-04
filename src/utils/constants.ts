@@ -5,10 +5,19 @@ import lottePopcard from '@static/media/videos/letsee.lotte.popcard.mp4'
 import megacoffee from '@static/media/videos/letsee.megacoffee.mp4'
 import gwanhwasoo from '@static/media/videos/letsee.gwanhwasoo.mp4'
 
+export const TAU = Math.PI * 2
+
 export const cardData = [
   {
     src: lotteJollycatch,
-    title: '졸리캐치',
+    title: '신한은행 디지로그',
+    date: '2022.11',
+    partner: '롯데백화점',
+    desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
+  },
+  {
+    src: lotteJollycatch,
+    title: '롯데백화점 AR',
     date: '2022.12',
     partner: '롯데백화점',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
@@ -29,14 +38,14 @@ export const cardData = [
   },
   {
     src: lottePopcard,
-    title: 'AR 팝업카드',
-    date: '2023.01',
+    title: '독립기념관',
+    date: '2023.08',
     partner: '롯데백화점',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
   },
   {
     src: megacoffee,
-    title: '손흥민 AR',
+    title: '메가커피 손흥민 AR',
     date: '2022.11',
     partner: 'MEGACOFFEE',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
@@ -44,6 +53,20 @@ export const cardData = [
   {
     src: gwanhwasoo,
     title: '광화시대',
+    date: '2021.12',
+    partner: '한국콘텐츠진흥원',
+    desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
+  },
+  {
+    src: gwanhwasoo,
+    title: '광야 AR 메시지',
+    date: '2021.12',
+    partner: '한국콘텐츠진흥원',
+    desc: 'Word Tracking을 이용한\n 프로젝트입니다.',
+  },
+  {
+    src: gwanhwasoo,
+    title: 'Experiment',
     date: '2021.12',
     partner: '한국콘텐츠진흥원',
     desc: 'Word Tracking을 이용한\n 프로젝트입니다.',

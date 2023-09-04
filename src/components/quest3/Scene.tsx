@@ -1,5 +1,5 @@
 import { Suspense, useLayoutEffect } from 'react'
-import { AdaptiveDpr, AdaptiveEvents, Environment, Preload } from '@react-three/drei'
+import {AdaptiveDpr, AdaptiveEvents, Environment, Preload} from '@react-three/drei'
 import CustomDirectionalLight from '@src/components/quest3/DirectionalLight.tsx'
 import WaterFloor from '@src/components/quest3/WaterFloor.tsx'
 import { useThree } from '@react-three/fiber'
@@ -9,6 +9,9 @@ import Logo from '@src/components/quest3/Logo.tsx'
 import CameraControl from '@src/components/quest3/CameraControl.tsx'
 import Machines from '@src/components/quest3/Machines.tsx'
 import Flies from '@src/components/quest3/Flies.tsx'
+import SkyDom from "@src/components/quest3/SkyDom.tsx";
+import DashedLineGuide from "@src/components/quest3/DashedLineGuide.tsx";
+import LineBox from "@src/components/quest3/LineBox.tsx";
 
 export default function Scene() {
   const { camera } = useThree()
@@ -19,21 +22,27 @@ export default function Scene() {
 
   return (
     <Suspense fallback={null}>
-      <color attach='background' args={['#c1c1c1']} />
-      <fogExp2 attach='fog' args={['#c1c1c1', 0.025]} />
-      {/*<fog attach='fog' args={['#c1c1c1', 20, 50]} />*/}
+      <fogExp2 attach='fog' args={['#000', 0.03]} />
       <CustomDirectionalLight />
-      <Environment preset='sunset' blur={100} />
+      <Environment preset={'night'} blur={100} />
       <Effects />
-      <Logo />
+
+      <LineBox />
+
+      <Suspense>
+        <Logo />
+      </Suspense>
       <CameraControl />
       <Suspense>
         <Machines />
       </Suspense>
-
       <Suspense>
         <WaterFloor />
       </Suspense>
+
+      <DashedLineGuide />
+
+      <SkyDom />
 
       <Suspense>
         <Flies />

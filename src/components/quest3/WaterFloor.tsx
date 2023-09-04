@@ -3,8 +3,8 @@ import * as THREE from 'three'
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js'
 import { useControls } from 'leva'
 import { useTexture } from '@react-three/drei'
-import dudvImg from '/static/media/images/waternormals.jpeg'
 import { useFrame } from '@react-three/fiber'
+import dudvImg from '/static/media/images/waternormals.jpeg'
 
 export default function WaterFloor() {
   const dudvMap = useTexture(dudvImg)
@@ -76,7 +76,7 @@ export default function WaterFloor() {
           float waveSpeed = ${controls.waveSpeed};
           vec2 distortedUv = texture2D( tDudv, vec2( vUv.x, vUv.y ) ).rg * waveStrength;
           vec2 vv = vUv.xy;
-          vv.x -= 3.8;
+          vv.x -= 5.0;
           vv.y -= 1.5;
           vv = vv * mat2(cos_factor, sin_factor, -sin_factor, cos_factor);
           distortedUv = vv + vec2( distortedUv.x, distortedUv.y - time * waveSpeed );
@@ -87,7 +87,7 @@ export default function WaterFloor() {
           uv.xy += distortion;
   
           vec4 base = texture2DProj( tDiffuse, uv );
-          vec4 water = vec4( blendOverlay( base.rgb, color ) * 0.555, 1.0 );
+          vec4 water = vec4( blendOverlay( base.rgb, color ) * 0.455, 1.0 );
           
           vec4 colorBase = vec4(vec3(distortion.g * -0.302), 1.);
           
@@ -99,7 +99,7 @@ export default function WaterFloor() {
       `,
     }
 
-    const geometry = new THREE.CircleGeometry(100, 30)
+    const geometry = new THREE.CircleGeometry(500, 30)
     const reflector = new Reflector(geometry, {
       color: controls.color,
       clipBias: controls.clipBias,
@@ -107,6 +107,7 @@ export default function WaterFloor() {
     })
     reflector.rotation.x = -Math.PI / 2
     ref.current.add(reflector)
+    dispatchEvent(new Event('waterfloor-loaded'))
 
     return () => {
       geometry.dispose()

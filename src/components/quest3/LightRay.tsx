@@ -60,12 +60,12 @@ const LightRayMaterial: any = shaderMaterial(
       float t = time * 0.02;
     
       vec2 imageColor = texture2D(imageTexture, vec2(t, vUv.x)).xx;
-      imageColor *= 0.7;
-      imageColor += 0.5;
+      imageColor *= 0.35;
+      imageColor += 1.0;
     
-      float value = smoothstep(0.0, 1.0, imageColor.x - vUv.y) * 0.5;
+      float value = smoothstep(0.0, 1.0, imageColor.x - vUv.y) * 0.09;
 
-      gl_FragColor = vec4(0.4, 0.45, 1.0, value);
+      gl_FragColor = vec4(0.3, 0.5, 1.0, value);
     }  
   `,
 )
